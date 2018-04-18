@@ -1,12 +1,17 @@
 package com.mavericks.orderservice.services;
 
+import com.mavericks.orderservice.models.Order;
+import com.mavericks.orderservice.repositories.OrdersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class OrdersService {
-  public String createOrder(List<String> productIds) {
-    return "someId";
+  @Autowired
+  private OrdersRepository ordersRepository;
+
+  public Order create(Order order) {
+    return ordersRepository.save(order);
   }
 }
