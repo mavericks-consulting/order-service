@@ -13,9 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.data.rest.webmvc.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrdersServiceTest {
@@ -43,6 +41,28 @@ public class OrdersServiceTest {
     Order actualOrder = ordersService.create(orderToCreate);
 
     Assert.assertEquals(orderToCreate, actualOrder);
+  }
 
+  @Test
+  public void shouldFetchOrderById() {
+    Long orderId = 2L;
+    Order expectedOrder = new Order();
+    expectedOrder.setId(orderId);
+    expectedOrder.setProductIds("productid1,productid2");
+
+    when(ordersRepository.findById(orderId)).thenReturn(expectedOrder);
+
+    Order actualOrder = ordersService.getById(orderId);
+
+    Assert.assertEquals(expectedOrder, actualOrder);
+  }
+
+  @Test(expected = ResourceNotFoundException.class)
+  public void shouldThrowNotFoundExceptionIfOrderDoesNotExist() {
+    Long orderId = 2L;
+
+    when(ordersRepository.findById(orderId)).thenReturn(null);
+
+    ordersService.getById(orderId);
   }
 }

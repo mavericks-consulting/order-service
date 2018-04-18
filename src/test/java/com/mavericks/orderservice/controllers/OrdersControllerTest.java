@@ -43,4 +43,18 @@ public class OrdersControllerTest {
 
     Assert.assertEquals(orderToCreate, actualOrder);
   }
+
+  @Test
+  public void shouldFetchOrderById() {
+    Long orderId = 2L;
+    Order expectedOrder = new Order();
+    expectedOrder.setId(orderId);
+    expectedOrder.setProductIds("productid1, productid2");
+
+    when(ordersService.getById(orderId)).thenReturn(expectedOrder);
+
+    Order actualOrder = ordersController.getById(orderId);
+
+    Assert.assertEquals(expectedOrder, actualOrder);
+  }
 }

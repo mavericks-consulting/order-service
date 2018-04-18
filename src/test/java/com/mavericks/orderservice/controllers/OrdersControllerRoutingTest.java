@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -64,5 +65,36 @@ public class OrdersControllerRoutingTest {
             .content(TestUtil.asJsonString(orderToCreate)))
         .andExpect(status().isOk())
         .andExpect(content().string(equalTo("{\"id\":1,\"productIds\":\"a,b\"}")));
+  }
+
+  @Test
+  public void shouldFetchOrderById() throws Exception {
+    Long orderId = 1L;
+
+    Order expectedOrder = new Order();
+    expectedOrder.setId(orderId);
+    expectedOrder.setProductIds("a,b");
+
+    when(ordersService.getById(orderId)).thenReturn(expectedOrder);
+
+    mockMvc.perform(
+        MockMvcRequestBuilders
+            .get("/orders/1")
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo("{\"id\":1,\"productIds\":\"a,b\"}")));
+  }
+
+  @Test
+  public void shouldThrowNotFoundIfOrderDoesNotExist() throws Exception {
+    Long orderId = 20L;
+
+    when(ordersService.getById(orderId)).thenThrow(new ResourceNotFoundException());
+
+    mockMvc.perform(
+        MockMvcRequestBuilders
+            .get("/orders/20")
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(status().isNotFound());
   }
 }

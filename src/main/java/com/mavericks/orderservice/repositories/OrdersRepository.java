@@ -5,4 +5,6 @@ import org.springframework.data.repository.*;
 
 public interface OrdersRepository extends Repository<Order, Long>{
   Order save(Order order);
+
+  Order findById(Long orderId);
 }
