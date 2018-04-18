@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.mavericks.orderservice.models.Order;
 import com.mavericks.orderservice.services.OrdersService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,9 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import utils.TestUtil;
-
-import java.util.Arrays;
-import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest(classes = OrdersController.class)
@@ -50,7 +46,6 @@ public class OrdersControllerRoutingTest {
   }
 
   @Test
-//  @Ignore
   public void shouldCreateOrder() throws Exception {
     String productIds = "a,b";
     Order createdOrder = new Order();
