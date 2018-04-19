@@ -25,6 +25,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import utils.TestUtil;
 
+import java.math.BigDecimal;
+
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest(classes = OrdersController.class)
 @AutoConfigureMockMvc
@@ -52,6 +54,7 @@ public class OrdersControllerRoutingTest {
     Order createdOrder = new Order();
     createdOrder.setId(1L);
     createdOrder.setProductIds(productIds);
+    createdOrder.setTotal(BigDecimal.valueOf(10L));
 
     Order orderToCreate = new Order();
     orderToCreate.setProductIds(productIds);
@@ -64,7 +67,7 @@ public class OrdersControllerRoutingTest {
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8)
             .content(TestUtil.asJsonString(orderToCreate)))
         .andExpect(status().isOk())
-        .andExpect(content().string(equalTo("{\"id\":1,\"productIds\":\"a,b\"}")));
+        .andExpect(content().string(equalTo("{\"id\":1,\"productIds\":\"a,b\",\"total\":10}")));
   }
 
   @Test
@@ -74,6 +77,7 @@ public class OrdersControllerRoutingTest {
     Order expectedOrder = new Order();
     expectedOrder.setId(orderId);
     expectedOrder.setProductIds("a,b");
+    expectedOrder.setTotal(BigDecimal.valueOf(12L));
 
     when(ordersService.getById(orderId)).thenReturn(expectedOrder);
 
@@ -82,7 +86,7 @@ public class OrdersControllerRoutingTest {
             .get("/orders/1")
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
-        .andExpect(content().string(equalTo("{\"id\":1,\"productIds\":\"a,b\"}")));
+        .andExpect(content().string(equalTo("{\"id\":1,\"productIds\":\"a,b\",\"total\":12}")));
   }
 
   @Test

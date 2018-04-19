@@ -26,6 +26,11 @@ POSTGRES_USER - user to connect to postgres
 
 POSTGRES_PASSWORD - password for user to connect to postgres
 
+PRODUCT_SERVICE_HOST - host running ProductService
+
+PRODUCT_SERVICE_PORT - port running ProductService
+
+
 Before booting the app, create database using `createdb order-service`.
 
 Run the app using `./gradlew bootRun`

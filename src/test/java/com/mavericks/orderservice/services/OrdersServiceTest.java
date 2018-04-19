@@ -1,9 +1,12 @@
 package com.mavericks.orderservice.services;
 
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.mavericks.orderservice.models.Order;
+import com.mavericks.orderservice.models.Product;
 import com.mavericks.orderservice.repositories.OrdersRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.data.rest.webmvc.*;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import utils.OrderBuilder;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Arrays;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrdersServiceTest {
@@ -23,6 +31,10 @@ public class OrdersServiceTest {
 
   @Mock
   private OrdersRepository ordersRepository;
+  @Mock
+  private ProductService productService;
+
+  private OrderBuilder orderBuilder = new OrderBuilder();
 
   @Before
   public void setUp() {
@@ -30,17 +42,25 @@ public class OrdersServiceTest {
   }
 
   @Test
-  public void shouldCreateNewOrder() {
-    String productIds = "productId1,productId2";
-    Order orderToCreate = new Order();
-    orderToCreate.setId(1L);
-    orderToCreate.setProductIds(productIds);
+  public void shouldCreateNewOrder() throws IOException {
+    String productId1 = "productId1";
+    String productId2 = "productId2";
+    String productIds = productId1 + "," + productId2;
 
-    when(ordersRepository.save(orderToCreate)).thenReturn(orderToCreate);
+    Order orderToCreate = orderBuilder.withId(1L).withProductIds(productIds).build();
+    Order createdOrder = orderBuilder.withId(1L).withProductIds(productIds).withTotal(BigDecimal.valueOf(30.00)).build();
+
+    when(productService.getProducts(productIds))
+        .thenReturn(Arrays.asList(
+            new Product(productId1, "Product1", BigDecimal.valueOf(10.00)),
+            new Product(productId2, "Product2", BigDecimal.valueOf(20.00))));
+    when(ordersRepository.save(createdOrder)).thenReturn(createdOrder);
 
     Order actualOrder = ordersService.create(orderToCreate);
 
-    Assert.assertEquals(orderToCreate, actualOrder);
+    verify(ordersRepository, times(1)).save(createdOrder);
+    verify(productService, times(1)).getProducts(productIds);
+    Assert.assertEquals(createdOrder, actualOrder);
   }
 
   @Test

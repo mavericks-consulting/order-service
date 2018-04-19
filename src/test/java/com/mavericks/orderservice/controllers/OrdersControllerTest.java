@@ -13,8 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrdersControllerTest {
@@ -31,7 +30,7 @@ public class OrdersControllerTest {
   }
 
   @Test
-  public void shouldCreateANewOrder() {
+  public void shouldCreateANewOrder() throws IOException {
     String productIds = "productId1,productId2";
     Order orderToCreate = new Order();
     orderToCreate.setId(1L);
