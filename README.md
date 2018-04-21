@@ -6,6 +6,9 @@
 
 ## Endpoints
 
+Health check <br/>
+`GET /health`
+
 To create a new order, use <br/>
 `POST /orders` with body: `{"productIds": "<productId1>,<productId2>,...,<productIdn>"}`
 
