@@ -4,6 +4,14 @@
 * Java >=1.8
 * PostgreSQL >=10.3
 
+## Endpoints
+
+To create a new order, use <br/>
+`POST /orders` with body: `{"productIds": "<productId1>,<productId2>,...,<productIdn>"}`
+
+To retrieve a created order, use <br/>
+`GET /orders/{orderId}`
+
 ## Build
 
 To build the application, run `./gradlew build`
